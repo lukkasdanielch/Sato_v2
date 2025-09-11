@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Aula0909">
         <activity
+            android:name=".Tela4"
+            android:exported="false"
+            android:label="@string/title_activity_tela4"
+            android:theme="@style/Theme.Aula0909" />
+        <activity
             android:name=".Tela3"
             android:exported="false"
             android:label="@string/title_activity_tela3"

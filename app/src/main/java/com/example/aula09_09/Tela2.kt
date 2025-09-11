@@ -1,6 +1,7 @@
 package com.example.aula09_09
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.aula09_09.data.Carro
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +74,11 @@ fun Tela2(nome: String, navController: NavHostController, listaCarros: MutableLi
                 ) {
                     items(listaCarros) { carro ->
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("tela4/${carro.placa}")
+                                },
                             elevation = CardDefaults.cardElevation(4.dp)
                         ) {
                             Row(modifier = Modifier.padding(16.dp)) {
@@ -83,18 +90,21 @@ fun Tela2(nome: String, navController: NavHostController, listaCarros: MutableLi
                                 }
                                 Spacer(modifier = Modifier.width(50.dp))
                                 Image(
-                                    painter = painterResource(id = carro.imagem),
+                                    painter = rememberAsyncImagePainter(carro.imagemUri ?: R.drawable.hb20),
                                     contentDescription = carro.nome,
-                                    modifier = Modifier.height(70.dp)
+                                    modifier = Modifier.size(100.dp),
+                                    contentScale = ContentScale.Crop
                                 )
                             }
+                        }
+
+                    }
                         }
                     }
                 }
             }
         }
-    }
-}
+
 
 
 @Preview(showBackground = true)

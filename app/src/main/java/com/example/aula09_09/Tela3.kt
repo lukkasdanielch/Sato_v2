@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.aula09_09.data.Carro
 
@@ -123,17 +125,17 @@ fun Tela3(
             Button(
                 onClick = {
                     if (nome.isNotEmpty() && modelo.isNotEmpty() && ano.isNotEmpty() && placa.isNotEmpty() && imagemUri != null) {
-                        // Salva o carro
+
                         onCarroAdicionado(
                             Carro(
-                                nome,
-                                modelo,
-                                ano.toInt(),
-                                placa,
-                                imagemUri.hashCode() // podemos armazenar a Uri ou usar hashCode para teste
+                                nome = nome,
+                                modelo = modelo,
+                                ano = ano.toInt(),
+                                placa = placa,
+                                imagemUri = imagemUri
                             )
                         )
-                        navController.popBackStack()
+
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -142,4 +144,12 @@ fun Tela3(
             }
         }
     }
+}
+@Preview
+@Composable
+fun Tela3Preview() {
+    Tela3(
+        navController = rememberNavController(),
+        onCarroAdicionado = {}
+    )
 }
