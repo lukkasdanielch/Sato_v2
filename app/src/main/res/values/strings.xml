@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">aula 09-09</string>
+    <string name="title_activity_tela2">tela2</string>
+    <string name="title_activity_tela1">Tela1</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_tela3">Tela3</string>
 </resources>

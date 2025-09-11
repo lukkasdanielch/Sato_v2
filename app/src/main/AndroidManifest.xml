@@ -12,7 +12,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Aula0909">
         <activity
+            android:name=".Tela3"
+            android:exported="false"
+            android:label="@string/title_activity_tela3"
+            android:theme="@style/Theme.Aula0909" />
+        <activity
             android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.Aula0909">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Tela1"
+            android:exported="false"
+            android:label="@string/title_activity_tela1"
+            android:theme="@style/Theme.Aula0909" />
+        <activity
+            android:name=".Tela2"
+            android:exported="false"
+            android:label="@string/title_activity_tela2"
+            android:theme="@style/Theme.Aula0909" />
+        <activity
+            android:name=".AppNavigation"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Aula0909">
