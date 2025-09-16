@@ -14,11 +14,41 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val listaCarros = remember {
         mutableStateListOf(
-            Carro("HB20", "MLV3I33", 2020, "ASD6522", imagemRes = R.drawable.hb20),
-            Carro("Onix", "KJD8H92", 2021, "BXD9033", imagemRes = R.drawable.celta)
+            Carro(
+                nome = "HB20",
+                modelo = "MLV3I33",
+                ano = 2020,
+                placa = "ASD6522",
+                imagemRes = R.drawable.hb2022,
+                fotos = mutableListOf(
+                    R.drawable.hb2022,   // foto principal
+                    R.drawable.hb202,   // pode repetir ou trocar
+                )
+            ),
+            Carro(
+                nome = "Sandero",
+                modelo = "BNK2010",
+                ano = 2021,
+                placa = "BNK2010",
+                imagemRes = R.drawable.sandero,
+                fotos = mutableListOf(
+                    R.drawable.sandero1,  // foto principal
+                    R.drawable.sandero   // outra foto
+                )
+            ),
+            Carro(
+                nome = "celta",
+                modelo = "KJD8H92",
+                ano = 2021,
+                placa = "BXD9033",
+                imagemRes = R.drawable.celta,
+                fotos = mutableListOf(
+                    R.drawable.celta2,  // foto principal
+                    R.drawable.celta   // outra foto
+                )
+            )
         )
     }
-
     NavHost(navController, startDestination = "tela1") {
         composable("tela1") { Tela1(navController) }
         composable("tela2/{nome}") { backStackEntry ->

@@ -90,7 +90,11 @@ fun Tela2(nome: String, navController: NavHostController, listaCarros: MutableLi
                                 }
                                 Spacer(modifier = Modifier.width(50.dp))
                                 Image(
-                                    painter = rememberAsyncImagePainter(carro.imagemUri ?: R.drawable.hb20),
+                                    painter = when {
+                                        carro.imagemUri != null -> rememberAsyncImagePainter(carro.imagemUri) // URI da galeria/câmera
+                                        carro.imagemRes != null -> painterResource(id = carro.imagemRes)     // drawable
+                                        else -> painterResource(id = R.drawable.hb20)                        // fallback
+                                    },
                                     contentDescription = carro.nome,
                                     modifier = Modifier.size(100.dp),
                                     contentScale = ContentScale.Crop
@@ -110,9 +114,29 @@ fun Tela2(nome: String, navController: NavHostController, listaCarros: MutableLi
 @Preview(showBackground = true)
 @Composable
 fun Tela2Preview() {
-    // Passa um nome de teste e um NavController de preview
+    // Lista de carros de exemplo (MutableList)
+    val listaCarrosFake: MutableList<Carro> = mutableListOf(
+        Carro(
+            nome = "Onix",
+            modelo = "KJD8H92",
+            ano = 2021,
+            placa = "BXD9033",
+            imagemRes = R.drawable.celta,
+            fotos = mutableListOf(R.drawable.celta, R.drawable.gol)
+        ),
+        Carro(
+            nome = "Civic",
+            modelo = "HGJ92K",
+            ano = 2020,
+            placa = "ABC1234",
+            imagemRes = R.drawable.civic,
+            fotos = mutableListOf(R.drawable.civic)
+        )
+    )
+
     Tela2(
-        nome = "Lucas", navController = rememberNavController(),
-        listaCarros = TODO()
+        nome = "Lucas",
+        navController = rememberNavController(),
+        listaCarros = listaCarrosFake
     )
 }

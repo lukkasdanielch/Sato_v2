@@ -1,9 +1,12 @@
 package com.example.aula09_09
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -40,26 +44,32 @@ import com.example.aula09_09.ui.theme.Aula0909Theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Tela4(navController: NavHostController, carro: Carro) {
-    // Lista de imagens do carro
-    var fotos = remember { mutableStateListOf<Any>().apply { addAll(carro.fotos) } }
+    val fotos = remember { carro.fotos } // lista de fotos do carro
+
+    // Launcher para abrir a galeria
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { fotos.add(it) } // adiciona a URI na lista
+    }
 
     Scaffold(
+        containerColor = Color.Black,
         topBar = {
             TopAppBar(
-                title = { Text("Fotos de ${carro.nome}") },
+                title = { Text("${carro.nome} - ${carro.placa}") },
                 navigationIcon = {
-                    Button(onClick = { navController.popBackStack() }) {
+                    Button(onClick = { navController.popBackStack() }
+                    ) {
                         Text("< Voltar")
                     }
-                }
+                },
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // Exemplo: adiciona foto fixa
-                    fotos.add(R.drawable.hb20)
-                    // 👉 depois você pode trocar para seletor de imagem (gallery/camera)
+                    launcher.launch("image/*")
                 },
                 containerColor = Color(0xFFAA162C),
                 contentColor = Color.White
@@ -75,14 +85,16 @@ fun Tela4(navController: NavHostController, carro: Carro) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Fotos do ${carro.nome}", style = MaterialTheme.typography.titleMedium)
-
-            val fotos = remember { carro.fotos }
-
-            LazyColumn {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(fotos) { foto ->
                     Image(
-                        painter = rememberAsyncImagePainter(foto),
+                        painter = when (foto) {
+                            is Int -> painterResource(id = foto)
+                            is Uri -> rememberAsyncImagePainter(foto)
+                            else -> painterResource(id = R.drawable.civic) // fallback
+                        },
                         contentDescription = "Foto do carro",
                         modifier = Modifier
                             .fillMaxWidth()
@@ -91,23 +103,24 @@ fun Tela4(navController: NavHostController, carro: Carro) {
                     )
                 }
             }
-
-            Button(onClick = { fotos.add(R.drawable.hb20) }) {
-                Text("Adicionar Foto")
-            }
-                }
-            }
         }
-
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun Tela4Preview() {
     val carroFake = Carro(
-        nome = "HB20",
-        modelo = "Comfort",
-        ano = 2020,
-        placa = "ASD6522",
+        nome = "Onix",
+        modelo = "KJD8H92",
+        ano = 2021,
+        placa = "BXD9033",
+        imagemRes = R.drawable.celta,
+        fotos = mutableListOf(
+            R.drawable.celta,
+            R.drawable.gol,// foto principal
+            R.drawable.civic   // outra foto
+        )
 
     )
 
