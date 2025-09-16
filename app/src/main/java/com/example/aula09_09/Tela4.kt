@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +60,12 @@ fun Tela4(navController: NavHostController, carro: Carro) {
             TopAppBar(
                 title = { Text("${carro.nome} - ${carro.placa}") },
                 navigationIcon = {
-                    Button(onClick = { navController.popBackStack() }
+                    Button(onClick = { navController.popBackStack()
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFAA162C),
+                            contentColor = Color.White
+                        )
                     ) {
                         Text("< Voltar")
                     }

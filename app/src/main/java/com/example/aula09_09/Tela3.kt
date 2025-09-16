@@ -81,7 +81,12 @@ fun Tela3(
 
             Button(
                 onClick = { launcher.launch("image/*") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFAA162C),
+                    contentColor = Color.White
+                )
             ) {
                 Text("Selecionar Imagem")
             }
@@ -92,7 +97,17 @@ fun Tela3(
                 value = nome,
                 onValueChange = { nome = it },
                 label = { Text("Nome") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.DarkGray,
+                    focusedContainerColor = Color.White,   // fundo branco quando focado
+                    unfocusedContainerColor = Color.White  // fundo branco quando não focado
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -101,7 +116,17 @@ fun Tela3(
                 value = modelo,
                 onValueChange = { modelo = it },
                 label = { Text("Modelo") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.DarkGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -110,7 +135,17 @@ fun Tela3(
                 value = ano,
                 onValueChange = { ano = it },
                 label = { Text("Ano") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.DarkGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -119,7 +154,17 @@ fun Tela3(
                 value = placa,
                 onValueChange = { placa = it },
                 label = { Text("Placa") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.Gray,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.DarkGray,
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -140,7 +185,11 @@ fun Tela3(
 
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFAA162C),
+                    contentColor = Color.White
+                )
             ) {
                 Text("Salvar Carro")
             }
