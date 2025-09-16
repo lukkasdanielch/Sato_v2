@@ -1,6 +1,7 @@
 package com.example.aula09_09
 
 
+import Tela4
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -21,8 +22,8 @@ fun AppNavigation() {
                 placa = "ASD6522",
                 imagemRes = R.drawable.hb2022,
                 fotos = mutableListOf(
-                    R.drawable.hb2022,   // foto principal
-                    R.drawable.hb202,   // pode repetir ou trocar
+                    R.drawable.hb2022,
+                    R.drawable.hb202,
                 )
             ),
             Carro(
@@ -32,8 +33,8 @@ fun AppNavigation() {
                 placa = "BNK2010",
                 imagemRes = R.drawable.sandero,
                 fotos = mutableListOf(
-                    R.drawable.sandero1,  // foto principal
-                    R.drawable.sandero   // outra foto
+                    R.drawable.sandero1,
+                    R.drawable.sandero
                 )
             ),
             Carro(
@@ -43,8 +44,8 @@ fun AppNavigation() {
                 placa = "BXD9033",
                 imagemRes = R.drawable.celta,
                 fotos = mutableListOf(
-                    R.drawable.celta2,  // foto principal
-                    R.drawable.celta   // outra foto
+                    R.drawable.celta2,
+                    R.drawable.celta
                 )
             )
         )
@@ -58,14 +59,18 @@ fun AppNavigation() {
         composable("tela3") {
             Tela3(navController) { carroNovo ->
                 listaCarros.add(carroNovo)
-                navController.popBackStack() // volta para Tela2
+                navController.popBackStack()
             }
         }
         composable("tela4/{placa}") { backStackEntry ->
             val placa = backStackEntry.arguments?.getString("placa")
             val carro = listaCarros.find { it.placa == placa }
+
             if (carro != null) {
-                Tela4(navController, carro)
+                Tela4(navController = navController, carro = carro)
+            } else {
+
+                navController.popBackStack()
             }
         }
     }

@@ -105,8 +105,8 @@ fun Tela3(
                     unfocusedLabelColor = Color.Gray,
                     focusedTextColor = Color.Black,
                     unfocusedTextColor = Color.DarkGray,
-                    focusedContainerColor = Color.White,   // fundo branco quando focado
-                    unfocusedContainerColor = Color.White  // fundo branco quando não focado
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
 
