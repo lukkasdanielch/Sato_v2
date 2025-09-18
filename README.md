@@ -47,3 +47,13 @@ Foi desenvolvido como parte de um trabalho acadêmico, servindo como base para a
 
    ```bash
    git clone https://github.com/lukkasdanielch/Sato_v2.git
+---
+
+## Credenciais de acesso
+
+
+
+   ```bash
+  
+   Login Lucas
+   senha 123
