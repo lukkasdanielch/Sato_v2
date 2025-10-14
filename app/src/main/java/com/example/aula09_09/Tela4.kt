@@ -43,7 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.aula09_09.data.Carro
 import com.example.aula09_09.ui.theme.Aula0909Theme
-
+//t
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Tela4(navController: NavHostController, carro: Carro) {
