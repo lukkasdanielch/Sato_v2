@@ -1,5 +1,6 @@
 package com.example.aula09_09
 
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +40,18 @@ import androidx.navigation.NavHostController
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.aula09_09.data.Usuario
+import com.example.aula09_09.data.UsuarioDao
+
+import kotlinx.coroutines.launch
 
 @Composable
-fun Tela1(navController: NavHostController) {
-
+fun Tela1(navController: NavHostController, usuarioDao: UsuarioDao) {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,17 +59,14 @@ fun Tela1(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Caixa de login
         Surface(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             color = Color.Black,
-
             shape = RoundedCornerShape(16.dp)
         ) {
-
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
@@ -78,17 +82,7 @@ fun Tela1(navController: NavHostController) {
                     value = usuario,
                     onValueChange = { usuario = it },
                     label = { Text("Usuário") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = Color.Black,
-                        unfocusedLabelColor = Color.Gray,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.DarkGray,
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -98,48 +92,42 @@ fun Tela1(navController: NavHostController) {
                     onValueChange = { senha = it },
                     label = { Text("Senha") },
                     modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Black,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = Color.Black,
-                        unfocusedLabelColor = Color.Gray,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.DarkGray,
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
-                    )
+                    visualTransformation = PasswordVisualTransformation()
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
                     onClick = {
-                        if (usuario == "Lucas" && senha == "123") {
-                            navController.navigate("tela2/$usuario")
-
-                        } else {
-
-                            Toast.makeText(context, "Login inválido!", Toast.LENGTH_SHORT).show()
+                        scope.launch {
+                            val user = usuarioDao.login(usuario, senha)
+                            if (user != null) {
+                                navController.navigate("tela2/${user.nome}")
+                            } else {
+                                Toast.makeText(context, "Login inválido!", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     },
-
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFAA162C),
                         contentColor = Color.White
                     )
-                    ) {
-                    Text("Entrar")
+                ) { Text("Entrar") }
+                val scope = rememberCoroutineScope()
+
+                Button(onClick = {
+                    if (usuario.isNotEmpty() && senha.isNotEmpty()) {
+                        scope.launch {
+                            val usuario = Usuario(nome = usuario, senha = senha)
+                            usuarioDao.insert(usuario)  // suspend function
+                            navController.popBackStack()
+                        }
+                    }
+                }) {
+                    Text("Cadastrar")
                 }
             }
         }
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun Tela1Preview() {
-    Tela1(
-        navController = rememberNavController()
-    )
 }

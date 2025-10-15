@@ -1,65 +1,48 @@
 package com.example.aula09_09
 
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.aula09_09.data.Carro
-import com.example.aula09_09.ui.theme.Aula0909Theme
-//t
+import com.example.aula09_09.data.CarroDao
+import kotlinx.coroutines.launch
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Tela4(navController: NavHostController, carro: Carro) {
-    val fotos = remember { mutableStateListOf<Any>().apply { addAll(carro.fotos) } }
+fun Tela4(
+    navController: NavHostController,
+    carro: Carro,
+    carroDao: CarroDao
+) {
+    val scope = rememberCoroutineScope()
+
+    var nome by remember { mutableStateOf(carro.nome) }
+    var modelo by remember { mutableStateOf(carro.modelo) }
+    var ano by remember { mutableStateOf(carro.ano.toString()) }
+    var placa by remember { mutableStateOf(carro.placa) }
+    var imagemUri by remember { mutableStateOf<Uri?>(carro.imagemUri?.let { Uri.parse(it) }) }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let {
-            fotos.add(it)
-            carro.fotos.add(it)
-        }
+        uri?.let { imagemUri = it }
     }
 
     Scaffold(
-        containerColor = Color.Black,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text("${carro.nome} - ${carro.placa}") },
@@ -67,25 +50,12 @@ fun Tela4(navController: NavHostController, carro: Carro) {
                     Button(
                         onClick = { navController.popBackStack() },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFAA162C),
-                            contentColor = Color.White
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
-                    ) {
-                        Text("< Voltar")
-                    }
-                },
+                    ) { Text("< Voltar") }
+                }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    launcher.launch("image/*")
-                },
-                containerColor = Color(0xFFAA162C),
-                contentColor = Color.White
-            ) {
-                Text("+")
-            }
         }
     ) { padding ->
         Column(
@@ -95,52 +65,60 @@ fun Tela4(navController: NavHostController, carro: Carro) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            // Imagem do carro
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentAlignment = Alignment.Center
             ) {
-                items(fotos) { foto ->
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
+                Image(
+                    painter = imagemUri?.let { rememberAsyncImagePainter(it) }
+                        ?: carro.imagemRes?.let { painterResource(id = it) }
+                        ?: painterResource(id = R.drawable.hb20),
+                    contentDescription = "Imagem do Carro",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Image(
-                            painter = when (foto) {
-                                is Int -> painterResource(id = foto)
-                                is Uri -> rememberAsyncImagePainter(foto)
-                                else -> painterResource(id = R.drawable.civic)
-                            },
-                            contentDescription = "Foto do carro",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
+            Button(
+                onClick = { launcher.launch("image/*") },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) { Text("Alterar Imagem") }
+
+            OutlinedTextField(value = nome, onValueChange = { nome = it }, label = { Text("Nome") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = modelo, onValueChange = { modelo = it }, label = { Text("Modelo") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = ano, onValueChange = { ano = it }, label = { Text("Ano") }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = placa, onValueChange = { placa = it }, label = { Text("Placa") }, modifier = Modifier.fillMaxWidth())
+
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            val carroAtualizado = carro.copy(
+                                nome = nome,
+                                modelo = modelo,
+                                ano = ano.toIntOrNull() ?: carro.ano,
+                                placa = placa,
+                                imagemUri = imagemUri?.toString()
+                            )
+                            carroDao.update(carroAtualizado)
+                            navController.popBackStack()
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) { Text("Salvar") }
+
+
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Tela4Preview() {
-    val carroFake = Carro(
-        nome = "Onix",
-        modelo = "KJD8H92",
-        ano = 2021,
-        placa = "BXD9033",
-        imagemRes = R.drawable.celta,
-        fotos = mutableListOf(
-            R.drawable.celta,
-            R.drawable.gol,
-            R.drawable.civic
-        )
-    )
-
-    Tela4(
-        navController = rememberNavController(),
-        carro = carroFake
-    )
 }

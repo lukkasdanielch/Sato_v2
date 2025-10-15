@@ -15,12 +15,15 @@ import androidx.compose.ui.unit.dp
 import com.example.aula09_09.AppNavigation
 import com.example.aula09_09.ui.theme.Aula0909Theme
 
+import androidx.compose.ui.platform.LocalContext
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Aula0909Theme {
+                val context = LocalContext.current // <-- pega o context
                 Scaffold { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -29,7 +32,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .background(Color.Black)
                     ) {
-                        AppNavigation()
+                        AppNavigation(context)
                     }
                 }
             }
