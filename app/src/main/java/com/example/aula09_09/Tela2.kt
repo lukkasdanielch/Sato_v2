@@ -102,28 +102,31 @@ fun Tela2(
                                     contentScale = ContentScale.Crop
                                 )
 
-                                Spacer(modifier = Modifier.width(16.dp))
 
-                                // Botão deletar
-                                Button(
-                                    onClick = {
-                                        scope.launch {
-                                            carroDao.delete(carro)
-                                        }
-                                    },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color.Red,
-                                        contentColor = Color.White
-                                    )
-                                ) { Text("Deletar") }
-                            }
+
+                               }
+                            // Botão deletar
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        carroDao.delete(carro)
+                                    }
+                                },modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.Red,
+                                    contentColor = Color.White
+                                )
+                            ) { Text("Deletar") }
                         }
                     }
+
                 }
+                }
+
             }
         }
     }
-}
+
 @Preview(showBackground = true)
 @Composable
 fun Tela2Preview() {
