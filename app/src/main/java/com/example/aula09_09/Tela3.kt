@@ -2,6 +2,7 @@ package com.example.aula09_09
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -121,6 +122,13 @@ fun Tela3(navController: NavHostController, carroDao: CarroDao) {
 
                             navController.popBackStack()
                         }
+                    } else {
+                        // Mostra um Toast se algum campo estiver vazio ou se a imagem não estiver selecionada
+                        Toast.makeText(
+                            context,
+                            "Preencha todos os campos e adicione uma imagem!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
