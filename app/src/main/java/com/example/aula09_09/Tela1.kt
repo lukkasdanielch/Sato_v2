@@ -119,15 +119,51 @@ fun Tela1(navController: NavHostController, usuarioDao: UsuarioDao) {
                 Button(onClick = {
                     if (usuario.isNotEmpty() && senha.isNotEmpty()) {
                         scope.launch {
-                            val usuario = Usuario(nome = usuario, senha = senha)
-                            usuarioDao.insert(usuario)  // suspend function
-                            navController.popBackStack()
+                            val novoUsuario = Usuario(nome = usuario, senha = senha)
+                            usuarioDao.insert(novoUsuario)  // insere no banco
+
+                            Toast.makeText(context, "Cadastrado com sucesso!", Toast.LENGTH_SHORT).show()
+
+                            // Limpa os campos
+                            usuario = ""
+                            senha = ""
+
+
                         }
+                    } else {
+                        Toast.makeText(context, "Preencha todos os campos!", Toast.LENGTH_SHORT).show()
                     }
-                }) {
+                },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFAA162C),
+                        contentColor = Color.White
+                    )) {
                     Text("Cadastrar")
                 }
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun Tela1Preview() {
+
+    val fakeUsuarioDao = object : UsuarioDao {
+        override suspend fun insert(usuario: Usuario) {
+            // Não faz nada
+        }
+
+        override suspend fun login(nome: String, senha: String): Usuario? {
+            // Retorna sempre um usuário fake
+            return if (nome == "Lucas" && senha == "123") Usuario(nome = "Lucas", senha = "123") else null
+        }
+
+        override fun getUsuarios() = kotlinx.coroutines.flow.flowOf(emptyList<Usuario>())
+    }
+
+    Tela1(
+        navController = rememberNavController(),
+        usuarioDao = fakeUsuarioDao
+    )
 }
