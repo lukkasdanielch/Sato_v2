@@ -133,7 +133,7 @@ fun Tela1(navController: NavHostController, usuarioDao: UsuarioDao) {
                     } else {
                         Toast.makeText(context, "Preencha todos os campos!", Toast.LENGTH_SHORT).show()
                     }
-                },
+                },//
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFAA162C),
