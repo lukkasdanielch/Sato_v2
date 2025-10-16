@@ -1,5 +1,6 @@
 package com.example.aula09_09
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -19,6 +19,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.aula09_09.data.Carro
 import com.example.aula09_09.data.CarroDao
 import kotlinx.coroutines.launch
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +31,7 @@ fun Tela3(navController: NavHostController, carroDao: CarroDao) {
     var imagemUri by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current
-    val scope = rememberCoroutineScope() // <-- scope para chamar suspend functions
+    val scope = rememberCoroutineScope()
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
@@ -93,17 +94,31 @@ fun Tela3(navController: NavHostController, carroDao: CarroDao) {
             Button(
                 onClick = {
                     if (nome.isNotEmpty() && modelo.isNotEmpty() && ano.isNotEmpty() && placa.isNotEmpty() && imagemUri != null) {
+
+                        // Salva a imagem na pasta interna
+                        val caminhoImagem = saveImageToInternalStorage(
+                            context,
+                            Uri.parse(imagemUri),
+                            "carro_${placa}.jpg"
+                        )
+
                         val novoCarro = Carro(
                             nome = nome,
                             modelo = modelo,
-                            ano = ano.toInt(),
+                            ano = ano.toIntOrNull() ?: 0,
                             placa = placa,
-                            imagemUri = imagemUri
+                            imagemUri = caminhoImagem
                         )
 
-                        // chama função suspend via CoroutineScope
                         scope.launch {
                             carroDao.insert(novoCarro)
+                            // limpa os campos após salvar
+                            nome = ""
+                            modelo = ""
+                            ano = ""
+                            placa = ""
+                            imagemUri = null
+
                             navController.popBackStack()
                         }
                     }
@@ -118,4 +133,16 @@ fun Tela3(navController: NavHostController, carroDao: CarroDao) {
             }
         }
     }
+}
+
+// Função para salvar imagem na pasta interna
+fun saveImageToInternalStorage(context: Context, uri: Uri, fileName: String): String {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val file = File(context.filesDir, fileName)
+    inputStream.use { input ->
+        file.outputStream().use { output ->
+            input?.copyTo(output)
+        }
+    }
+    return file.absolutePath
 }
